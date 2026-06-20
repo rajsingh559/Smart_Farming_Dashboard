@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block title %}Power BI Reports - Smart Farming Dashboard{% endblock %}
+{% block page_title %}Power BI Analytics Reports{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <!-- Reports Filters Panel -->
+    <div class="col-12">
+        <div class="card shadow-sm border-0 rounded-4 p-3">
+            <div class="card-body py-2">
+                <form class="row g-3 align-items-end" id="filterForm">
+                    <div class="col-md-3">
+                        <label class="form-label small fw-semibold text-muted">Crop Type</label>
+                        <select class="form-select" name="crop_type">
+                            <option value="">All Crops</option>
+                            <option value="wheat">Wheat</option>
+                            <option value="corn">Corn</option>
+                            <option value="cotton">Cotton</option>
+                            <option value="rice">Rice</option>
+                            <option value="soybeans">Soybeans</option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <label class="form-label small fw-semibold text-muted">Region</label>
+                        <select class="form-select" name="region">
+                            <option value="">All Regions</option>
+                            <option value="north">Northern District</option>
+                            <option value="south">Southern District</option>
+                            <option value="east">Eastern District</option>
+                            <option value="west">Western District</option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-2">
+                        <label class="form-label small fw-semibold text-muted">Season</label>
+                        <select class="form-select" name="season">
+                            <option value="">All Seasons</option>
+                            <option value="spring">Spring</option>
+                            <option value="summer">Summer</option>
+                            <option value="autumn">Autumn</option>
+                            <option value="winter">Winter</option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-2">
+                        <label class="form-label small fw-semibold text-muted">Year</label>
+                        <select class="form-select" name="year">
+                            <option value="">All Years</option>
+                            <option value="2026">2026</option>
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-2 d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-funnel-fill"></i> Apply Filters
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Reports Content Panel -->
+    <div class="col-12">
+        <div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+            <!-- Header bar -->
+            <div class="card-header bg-white border-0 py-3 px-4 d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="fw-bold mb-0 text-success"><i class="bi bi-bar-chart-steps"></i> Embedded Power BI Analytics</h5>
+                    <p class="text-muted small mb-0">Live interactive agricultural crop & weather analytics dashboard.</p>
+                </div>
+                <button class="btn btn-sm btn-outline-success" onclick="document.getElementById('pbi-iframe').src=document.getElementById('pbi-iframe').src;">
+                    <i class="bi bi-arrow-clockwise"></i> Refresh Report
+                </button>
+            </div>
+            
+            <!-- Embedded iframe with fallback styling -->
+            <div class="card-body p-0 border-top">
+                <div class="ratio ratio-16x9" style="min-height: 550px;">
+                    <!-- A standard public Microsoft Power BI sample report iframe -->
+                    <iframe 
+                        id="pbi-iframe"
+                        src="https://app.powerbi.com/view?r=eyJrIjoiM2NmNjc4NTktZmEyYS00Y2NhLTk3NTctZGFkYmU5NjY2NWRlIiwidCI6IjMxZDg1M2ZhLTg1MWItNGQ0YS1iNmY1LTRkODU0M2IyMGFkMCIsImMiOjEwfQ%3D%3D" 
+                        frameborder="0" 
+                        allowFullScreen="true">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.getElementById('filterForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        // Demonstrate interactive filter application
+        alert('Filters applied to Power BI iframe query context. In production, this can be synced dynamically via Power BI JavaScript SDK APIs.');
+    });
+</script>
+{% endblock %}

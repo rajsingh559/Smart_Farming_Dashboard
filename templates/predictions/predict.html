@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% block title %}Yield Prediction - Smart Farming Dashboard{% endblock %}
+{% block page_title %}Yield Prediction System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Form Inputs Card -->
+    <div class="col-lg-5 mb-4">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-header bg-white border-0 pt-4 px-4">
+                <h5 class="fw-bold mb-0 text-success"><i class="bi bi-graph-up-arrow"></i> Yield Estimator Variables</h5>
+                <p class="text-muted small mb-0">Input farm details and seasonal attributes to predict crop productivity.</p>
+            </div>
+            
+            <div class="card-body p-4">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold text-muted">Crop Type</label>
+                        {{ form.crop_type }}
+                        {% if form.crop_type.errors %}<div class="text-danger small mt-1">{{ form.crop_type.errors.0 }}</div>{% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold text-muted">Farm Size (Acres)</label>
+                        {{ form.farm_size }}
+                        {% if form.farm_size.errors %}<div class="text-danger small mt-1">{{ form.farm_size.errors.0 }}</div>{% endif %}
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-semibold text-muted">Expected Temp (°C)</label>
+                            {{ form.temperature }}
+                            {% if form.temperature.errors %}<div class="text-danger small mt-1">{{ form.temperature.errors.0 }}</div>{% endif %}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-semibold text-muted">Expected Rainfall (mm)</label>
+                            {{ form.rainfall }}
+                            {% if form.rainfall.errors %}<div class="text-danger small mt-1">{{ form.rainfall.errors.0 }}</div>{% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-calculator"></i> Predict Yield
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Analysis History Card -->
+    <div class="col-lg-7">
+        <!-- Latent Output result panel if just computed -->
+        {% if history %}
+        <div class="card border-0 bg-success text-white rounded-4 shadow-sm p-4 mb-4" style="background: linear-gradient(135deg, var(--sidebar-bg), var(--secondary-green)) !important;">
+            <div class="d-flex align-items-center gap-3">
+                <div class="rounded-circle bg-white bg-opacity-20 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                    <i class="bi bi-calculator-fill text-warning fs-2"></i>
+                </div>
+                <div>
+                    <h6 class="text-white-50 mb-0">LATEST PREDICTED CROP YIELD</h6>
+                    <h3 class="fw-bold mb-0">Expected Yield: <span class="text-warning">{{ history.0.predicted_yield }} Tons</span></h3>
+                    <small class="text-white-50">Calculated for {{ history.0.farm_size }} acres of {{ history.0.crop_type }} on {{ history.0.created_at|date:"M d, Y" }}</small>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-header bg-white border-0 pt-4 px-4">
+                <h5 class="fw-bold mb-0 text-success"><i class="bi bi-clock-history"></i> Yield Estimation Logs</h5>
+                <p class="text-muted small mb-0">Prior runs for yield productivity simulations.</p>
+            </div>
+            
+            <div class="card-body p-4">
+                {% if history %}
+                <div class="table-responsive">
+                    <table class="table custom-table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Crop</th>
+                                <th>Farm Size</th>
+                                <th>Expected Climate</th>
+                                <th>Predicted Yield</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pred in history %}
+                            <tr>
+                                <td>{{ pred.created_at|date:"M d, Y" }}</td>
+                                <td><span class="badge bg-success text-white">{{ pred.crop_type }}</span></td>
+                                <td>{{ pred.farm_size }} Acres</td>
+                                <td>{{ pred.temperature }}°C / {{ pred.rainfall }}mm</td>
+                                <td class="fw-bold text-success">{{ pred.predicted_yield }} Tons</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5 text-muted">
+                    <i class="bi bi-graph-up-arrow fs-1 mb-2 d-block"></i>
+                    <p class="mb-0">No records found. Complete the form parameters to run the yield regression estimation.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

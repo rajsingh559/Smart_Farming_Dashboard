@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block title %}My Profile - Smart Farming Dashboard{% endblock %}
+{% block page_title %}Farmer Profile{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Profile Card Summary -->
+    <div class="col-lg-4 mb-4">
+        <div class="card shadow-sm border-0 rounded-4 text-center p-4">
+            <div class="d-flex flex-column align-items-center">
+                <!-- Avatar -->
+                <div class="position-relative mb-3">
+                    {% if user.profile.profile_picture %}
+                        <img src="{{ user.profile.profile_picture.url }}" class="rounded-circle border border-3 border-success shadow" width="130" height="130" style="object-fit: cover;" alt="Avatar">
+                    {% else %}
+                        <div class="rounded-circle bg-success bg-opacity-10 text-success border border-3 border-success d-flex align-items-center justify-content-center shadow" style="width: 130px; height: 130px;">
+                            <i class="bi bi-person-fill" style="font-size: 4rem;"></i>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <h4 class="fw-bold mb-1">{{ user.profile.full_name|default:user.username }}</h4>
+                <p class="text-muted small mb-2"><i class="bi bi-envelope"></i> {{ user.email }}</p>
+                
+                <div class="d-flex gap-2 mb-4">
+                    <span class="badge bg-success text-capitalize px-3 py-2 fs-7">{{ user.role }}</span>
+                    {% if user.is_staff %}
+                    <span class="badge bg-danger px-3 py-2 fs-7">Staff</span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <hr class="text-muted">
+            
+            <!-- Farm Details list -->
+            <div class="text-start mt-3">
+                <h6 class="fw-bold text-success mb-3"><i class="bi bi-house-gear-fill"></i> Farm Information</h6>
+                
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted"><i class="bi bi-geo-alt"></i> Location:</span>
+                    <span class="fw-semibold">{{ user.profile.farm_location|default:"Not specified" }}</span>
+                </div>
+                
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted"><i class="bi bi-arrows-fullscreen"></i> Farm Size:</span>
+                    <span class="fw-semibold">{{ user.profile.farm_size|default:"0.0" }} Acres</span>
+                </div>
+                
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted"><i class="bi bi-flower1"></i> Preferred Crop:</span>
+                    <span class="fw-semibold">{{ user.profile.preferred_crop|default:"Not specified" }}</span>
+                </div>
+                
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted"><i class="bi bi-telephone"></i> Phone:</span>
+                    <span class="fw-semibold">{{ user.profile.phone_number|default:"Not specified" }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Profile Form Editors -->
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-header bg-white border-0 pt-4 px-4">
+                <h5 class="fw-bold mb-0 text-success"><i class="bi bi-pencil-square"></i> Edit Profile Details</h5>
+                <p class="text-muted small mb-0">Update your account settings and farming profile details.</p>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <h6 class="fw-bold text-muted border-bottom pb-2 mb-3">Account Credentials</h6>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-semibold text-muted">{{ user_form.first_name.label }}</label>
+                            {{ user_form.first_name }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-semibold text-muted">{{ user_form.last_name.label }}</label>
+                            {{ user_form.last_name }}
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label small fw-semibold text-muted">{{ user_form.email.label }}</label>
+                            {{ user_form.email }}
+                        </div>
+                    </div>
+                    
+                    <h6 class="fw-bold text-muted border-bottom pb-2 mt-4 mb-3">Farm Details</h6>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-semibold text-muted">{{ profile_form.phone_number.label }}</label>
+                            {{ profile_form.phone_number }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-semibold text-muted">{{ profile_form.farm_size.label }} (Acres)</label>
+                            {{ profile_form.farm_size }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-semibold text-muted">{{ profile_form.farm_location.label }}</label>
+                            {{ profile_form.farm_location }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label small fw-semibold text-muted">{{ profile_form.preferred_crop.label }}</label>
+                            {{ profile_form.preferred_crop }}
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label class="form-label small fw-semibold text-muted">{{ profile_form.profile_picture.label }}</label>
+                            {{ profile_form.profile_picture }}
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 d-flex justify-content-end">
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="bi bi-save"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

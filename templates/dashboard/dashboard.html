@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard - Smart Farming Dashboard{% endblock %}
+{% block page_title %}Dashboard Overview{% endblock %}
+
+{% block content %}
+<div class="row g-4 mb-4">
+    <!-- Total Farmers Registered KPI -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="kpi-card forest">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h6 class="text-muted small uppercase fw-bold mb-1">Registered Farmers</h6>
+                    <h3 class="fw-bold mb-0">{{ total_farmers }}</h3>
+                </div>
+                <div class="kpi-icon bg-forest-light">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+            </div>
+            <p class="text-success small mb-0 mt-3"><i class="bi bi-arrow-up-right"></i> Active Platform Users</p>
+        </div>
+    </div>
+    
+    <!-- Active Farms KPI -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="kpi-card">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h6 class="text-muted small uppercase fw-bold mb-1">Active Farms</h6>
+                    <h3 class="fw-bold mb-0">{{ active_farms }}</h3>
+                </div>
+                <div class="kpi-icon bg-leaf-light">
+                    <i class="bi bi-house-door-fill"></i>
+                </div>
+            </div>
+            <p class="text-success small mb-0 mt-3"><i class="bi bi-geo-alt-fill"></i> Tracked Regions</p>
+        </div>
+    </div>
+
+    <!-- Crop Yield Index KPI -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="kpi-card earth">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h6 class="text-muted small uppercase fw-bold mb-1">Crop Yield Index</h6>
+                    <h3 class="fw-bold mb-0">{{ crop_yield_index }}</h3>
+                </div>
+                <div class="kpi-icon bg-earth-light">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+            </div>
+            <p class="text-success small mb-0 mt-3"><i class="bi bi-arrow-up-right"></i> +2.4% vs last season</p>
+        </div>
+    </div>
+
+    <!-- Weather Status KPI -->
+    <div class="col-sm-6 col-xl-3">
+        <div class="kpi-card forest">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h6 class="text-muted small uppercase fw-bold mb-1">Weather Status</h6>
+                    <h3 class="fw-bold mb-0">{{ weather_status }}</h3>
+                </div>
+                <div class="kpi-icon bg-forest-light">
+                    <i class="bi bi-cloud-sun-fill"></i>
+                </div>
+            </div>
+            <p class="text-muted small mb-0 mt-3"><i class="bi bi-droplet-fill text-primary"></i> Rain avg: {{ avg_rainfall }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <!-- Chart 1: Crop Distribution -->
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 h-100 p-4">
+            <h5 class="fw-bold text-success mb-3">Crop Distribution</h5>
+            <div style="position: relative; height:260px;">
+                <canvas id="cropDistributionChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Chart 2: Rainfall Analysis -->
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4 h-100 p-4">
+            <h5 class="fw-bold text-success mb-3">Monthly Rainfall Analysis (mm)</h5>
+            <div style="position: relative; height:260px;">
+                <canvas id="rainfallChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <!-- Chart 3: Seasonal Yield Trends -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm rounded-4 p-4">
+            <h5 class="fw-bold text-success mb-3">Seasonal Yield Trends (Tons/Acre)</h5>
+            <div style="position: relative; height:240px;">
+                <canvas id="yieldTrendsChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Satisfaction index summary -->
+    <div class="col-lg-6">
+        <div class="card border-0 shadow-sm rounded-4 p-4 h-100 d-flex flex-column justify-content-between">
+            <div>
+                <h5 class="fw-bold text-success mb-2">Farmer Satisfaction Index</h5>
+                <p class="text-muted small">Aggregated farmer rating and satisfaction dashboard logs.</p>
+            </div>
+            <div class="text-center my-3">
+                <h1 class="display-3 fw-bold text-success mb-0">{{ avg_rating }}</h1>
+                <div class="text-warning mb-2 fs-4">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-half"></i>
+                </div>
+                <p class="text-muted small">Based on reviews submitted by enrolled farmers</p>
+            </div>
+            <div class="d-grid mt-2">
+                <a href="{% url 'feedback_list' %}" class="btn btn-outline-success">
+                    <i class="bi bi-pencil-square"></i> Leave feedback
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- ChartJS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Crop Distribution Chart (Doughnut)
+    const ctxCrop = document.getElementById('cropDistributionChart').getContext('2d');
+    new Chart(ctxCrop, {
+        type: 'doughnut',
+        data: {
+            labels: {{ crop_labels|safe }},
+            datasets: [{
+                data: {{ crop_data }},
+                backgroundColor: ['#1b4d3e', '#2e7d32', '#c77d3f', '#4caf50', '#8d6e63'],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { boxWidth: 12, font: { family: 'Outfit' } }
+                }
+            }
+        }
+    });
+
+    // Monthly Rainfall Analysis (Bar)
+    const ctxRain = document.getElementById('rainfallChart').getContext('2d');
+    new Chart(ctxRain, {
+        type: 'bar',
+        data: {
+            labels: {{ monthly_rainfall_labels|safe }},
+            datasets: [{
+                label: 'Rainfall (mm)',
+                data: {{ monthly_rainfall_data }},
+                backgroundColor: 'rgba(46, 125, 50, 0.75)',
+                borderColor: '#2e7d32',
+                borderWidth: 1,
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: { family: 'Outfit' } } },
+                x: { grid: { display: false }, ticks: { font: { family: 'Outfit' } } }
+            }
+        }
+    });
+
+    // Seasonal Yield Trends (Line)
+    const ctxYield = document.getElementById('yieldTrendsChart').getContext('2d');
+    new Chart(ctxYield, {
+        type: 'line',
+        data: {
+            labels: {{ seasonal_labels|safe }},
+            datasets: [{
+                label: 'Yield Index',
+                data: {{ seasonal_yield_data }},
+                borderColor: '#c77d3f',
+                backgroundColor: 'rgba(199, 125, 63, 0.1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#c77d3f'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: { family: 'Outfit' } } },
+                x: { grid: { display: false }, ticks: { font: { family: 'Outfit' } } }
+            }
+        }
+    });
+</script>
+{% endblock %}

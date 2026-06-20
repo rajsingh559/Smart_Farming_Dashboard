@@ -1,0 +1,222 @@
+/* Custom Premium Styles for Smart Farming Dashboard */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primary-green: #1b4d3e;     /* Deep Forest Green */
+    --secondary-green: #2e7d32;   /* Fresh Leaf Green */
+    --accent-earth: #c77d3f;      /* Warm Terracotta Earth */
+    --light-bg: #f4f6f5;          /* Very light green-gray background */
+    --card-bg: #ffffff;           /* Crisp white for cards */
+    --text-dark: #212529;         /* Dark gray for readability */
+    --text-muted: #6c757d;        /* Muted text color */
+    --sidebar-width: 260px;
+    --sidebar-bg: #113327;        /* Ultra deep green for sidebar */
+    --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: var(--light-bg);
+    color: var(--text-dark);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    width: var(--sidebar-width);
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: var(--sidebar-bg);
+    color: #ffffff;
+    z-index: 1000;
+    transition: var(--transition-smooth);
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar .nav-link {
+    color: rgba(255, 255, 255, 0.7);
+    padding: 0.8rem 1.5rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: var(--transition-smooth);
+    border-radius: 8px;
+    margin: 0.2rem 1rem;
+}
+
+.sidebar .nav-link:hover, .sidebar .nav-link.active {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar .nav-link.active {
+    background-color: var(--secondary-green);
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
+}
+
+/* Main Content Area */
+.main-content {
+    margin-left: var(--sidebar-width);
+    padding: 2rem;
+    min-height: 100vh;
+    transition: var(--transition-smooth);
+}
+
+/* Header Navbar */
+.top-navbar {
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    padding: 0.8rem 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Premium Cards */
+.kpi-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.02);
+    padding: 1.5rem;
+    transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+}
+
+.kpi-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
+}
+
+.kpi-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: var(--secondary-green);
+    transform: scaleX(0);
+    transition: var(--transition-smooth);
+}
+
+.kpi-card:hover::after {
+    transform: scaleX(1);
+}
+
+.kpi-card.earth::after {
+    background-color: var(--accent-earth);
+}
+
+.kpi-card.forest::after {
+    background-color: var(--primary-green);
+}
+
+.kpi-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.bg-forest-light {
+    background-color: rgba(27, 77, 62, 0.1);
+    color: var(--primary-green);
+}
+
+.bg-leaf-light {
+    background-color: rgba(46, 125, 50, 0.1);
+    color: var(--secondary-green);
+}
+
+.bg-earth-light {
+    background-color: rgba(199, 125, 63, 0.1);
+    color: var(--accent-earth);
+}
+
+/* Buttons and Inputs styling */
+.btn-primary {
+    background-color: var(--secondary-green);
+    border-color: var(--secondary-green);
+    font-weight: 500;
+    border-radius: 8px;
+    padding: 0.6rem 1.2rem;
+    transition: var(--transition-smooth);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: var(--primary-green);
+    border-color: var(--primary-green);
+    box-shadow: 0 4px 12px rgba(27, 77, 62, 0.2);
+}
+
+.btn-outline-primary {
+    color: var(--secondary-green);
+    border-color: var(--secondary-green);
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--secondary-green);
+    border-color: var(--secondary-green);
+}
+
+.form-control, .form-select {
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--secondary-green);
+    box-shadow: 0 0 0 0.25rem rgba(46, 125, 50, 0.25);
+}
+
+/* Tables Styling */
+.table-responsive {
+    border-radius: 12px;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+}
+
+.custom-table {
+    margin-bottom: 0;
+}
+
+.custom-table th {
+    background-color: var(--primary-green);
+    color: #ffffff;
+    font-weight: 500;
+    padding: 1rem;
+}
+
+.custom-table td {
+    padding: 1rem;
+    vertical-align: middle;
+}
+
+/* Mobile Sidebar Drawer styling */
+@media (max-width: 991.98px) {
+    .sidebar {
+        left: -260px;
+    }
+    
+    .sidebar.open {
+        left: 0;
+    }
+    
+    .main-content {
+        margin-left: 0;
+        padding: 1rem;
+    }
+}
